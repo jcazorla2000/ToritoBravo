@@ -17,7 +17,7 @@ class Board {
         this.img.onload = () => this.draw
     }
     draw() {
-        if (frames < 1400) this.x-= 2.5
+        if (frames < 1600) this.x-= 2.5
         if (this.x == -canvas.width) this.x = 0
         ctx.drawImage(this.img, this.x, 0, this.width, this.height)
         ctx.drawImage(this.img, this.x + canvas.width, 0, this.width, this.height)
@@ -53,17 +53,17 @@ class Bull {
   }
   charge() {
     if (this.x >= canvas.width + 400) {
-      this.x = 0
+      //this.x = 0
       this.chargeVar = false
     }
-    if (frames % 1000 == 0) this.chargeVar = true
+    if (frames % 1100 == 0) this.chargeVar = true
     if (this.chargeVar == true) this.x += 4
   }
 }
 
 class Cavernicola {
   constructor() {
-    this.x = 200;
+    this.x = 270;
     this.y = 370;
     this.width = 100;
     this.height = 150;
@@ -78,16 +78,16 @@ class Cavernicola {
     this.pos = 1;
   }
   draw() {
-    if (frames < 1400){
-      if (this.animate === 4 && frames % 10 == 0 && this.animateBool == false) {
+    if (frames < 1600){
+      if (this.animate === 4 && frames % 8 == 0 && this.animateBool == false) {
         this.animate-- ;
         this.animateBool = true;
-      } else if (this.animate == 0 && this.animateBool == true && frames % 10 == 0) {
+      } else if (this.animate == 0 && this.animateBool == true && frames % 8 == 0) {
         this.animate ++;
         this.animateBool = false
-      } else if (this.animate != 4 && this.animateBool == false && frames % 10 == 0) {
+      } else if (this.animate != 4 && this.animateBool == false && frames % 8 == 0) {
         this.animate++
-      } else if (this.animate != 4 && this.animateBool == true && frames % 10 == 0) {
+      } else if (this.animate != 4 && this.animateBool == true && frames % 8 == 0) {
         this.animate--
       }
     }
@@ -103,7 +103,7 @@ class Cavernicola {
   moveRight() {
     this.x += 15;
     this.imgNow = this.img
-    if (frames > 1400) {
+    if (frames > 1600) {
       if (this.animate === 4 && frames % 1 == 0 && this.animateBool == false) {
         this.animate-- ;
         this.animateBool = true;
@@ -127,7 +127,7 @@ class Cavernicola {
   moveLeft() {
     this.x -= 20;
     this.imgNow = this.imgLeft
-    if (frames > 1400) {
+    if (frames > 1600) {
       if (this.animate === 4 && frames % 1 == 0 && this.animateBool == false) {
         this.animate-- ;
         this.animateBool = true;
@@ -153,7 +153,7 @@ class Cavernicola {
 
 class Meat {
   constructor() {
-    this.x = 800;
+    this.x = 1000 + 40;
     this.y = 400;
     this.width = 40;
     this.height = 40;
@@ -169,7 +169,7 @@ class Meat {
 
 class Rock {
   constructor() {
-    this.x = 900;
+    this.x = 1000 + 70;
     this.y = 400;
     this.width = 70;
     this.height = 40;
@@ -183,6 +183,20 @@ class Rock {
   }
 }
 
+class Danger {
+  constructor() {
+    this.x = 90;
+    this.y = 300;
+    this.width = 50;
+    this.height = 50;
+    this.img = new Image();
+    this.img.src = "./images/danger.png"
+  }
+  draw(bully) {
+    ctx.drawImage(this.img, 0, 0, 360, 360, this.x, bully - 50, this.width, this.height)
+  }
+}
+
 
 
 let board = new Board()
@@ -190,6 +204,7 @@ let bull = new Bull()
 let cavernicola = new Cavernicola()
 let meat = new Meat()
 let rock = new Rock()
+let danger = new Danger()
 
 function generateMeat(){
   if (frames % 400 === 0){
@@ -199,7 +214,9 @@ function generateMeat(){
 }
 
 function drawMeat() {
-  meatArray.forEach(meat => meat.draw())
+  if (frames < 1600) {
+    meatArray.forEach(meat => meat.draw())
+  }
 }
 
 function clearBoard() {
@@ -214,12 +231,14 @@ function generateRock(){
 }
 
 function drawRock() {
-  rockArray.forEach(rock => rock.draw())
+  if (frames < 1600) {
+    rockArray.forEach(rock => rock.draw())
+  }
 }
 
 function checkCollition() {
   rockArray.forEach((rock, i) => {
-    if (cavernicola.isTouching(rock)) {
+    if (cavernicola.isTouching(rock) && frames < 1400) {
       console.log("f*ck")
       rockArray.splice(i, 1);
       health.value -= 15;
@@ -232,24 +251,25 @@ function checkCollition() {
       health.value += 15;
     }
   });
-    /*if (cavernicola.isTouching(bull)) {
+    if (cavernicola.isTouching(bull)) {
       console.log("f*ck NOOO")
       health.value -= 50;
-    }*/
+    }
 }
 
 function update() {
   frames++
   clearBoard()
   board.draw()
-  bull.draw()
-  cavernicola.draw()
+  danger.draw(bull.y)
   bull.position(cavernicola.y, cavernicola.pos)
   bull.charge()
   generateMeat()
   drawMeat()
   generateRock()
   drawRock()
+  bull.draw()
+  cavernicola.draw()
   checkCollition()
 }
 
@@ -264,13 +284,13 @@ document.onkeydown = (e) => {
         cavernicola.moveUp()
         break;
       case 68:
-        if (frames > 1400 && cavernicola.x < canvas.width - 100) cavernicola.moveRight()
+        if (frames > 1600 && cavernicola.x < canvas.width - 100) cavernicola.moveRight()
         break;
       case 83:
         cavernicola.moveDown()
         break;
       case 65:
-        if(frames > 1400 && cavernicola.x > 0)cavernicola.moveLeft()
+        if(frames > 1600 && cavernicola.x > 0)cavernicola.moveLeft()
         break;
       default:
         break;
