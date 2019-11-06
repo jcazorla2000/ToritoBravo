@@ -50,7 +50,7 @@ canvas {
 }
 
 #healthBar1 > h3 {
-    font-size: 1.5em;
+    font-size: 2em;
     color: black;
 }
 
@@ -64,6 +64,6 @@ canvas {
 }
 
 #healthBar2 > h3 {
-    font-size: 1.5em;
+    font-size: 2em;
     color: black;
 }
