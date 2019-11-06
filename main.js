@@ -63,13 +63,13 @@ class Bull {
     if (frames > 1100 && frames < 1600) {
       this.chargeVar = true
       if (frames < 1220 && frames % 2 == 0) {
-        danger.draw(bull.y)
+        danger.draw(this.y)
       }
     }
-    if (frames > 1920) {
+    if (frames > 2650) {
       this.chargeVar = true
-      if (frames < 1220 && frames % 2 == 0) {
-        danger.draw(bull.y)
+      if (frames < 2040 && frames % 2 == 0) {
+        danger.draw(this.y)
       }
     }
     if (this.chargeVar == true && frames > 1220) this.x += 4
@@ -234,14 +234,15 @@ class Meteor {
   }
   draw(ejex) {
     this.y += 0.8
-    if (this.x == ejex) {
+    if (this.x < ejex + 5 && this.x > ejex -5) {
+      console.log("a huevo")
     }
     else if (this.x > ejex) {
-      this.x -= 1.5
+      this.x -= 1.25
       this.imgNow = this.img
     }
     else if (this.x < ejex){
-      this.x += 1.5
+      this.x += 1.25
       this.imgNow = this.imgLeft
     }
     ctx.drawImage(this.imgNow, 0, 0, 920, 920, this.x, this.y, this.width, this.height)
@@ -342,41 +343,34 @@ function drawMeteor(ejex) {
 function checkCollition() {
   rockArray.forEach((rock, i) => {
     if (cavernicola.isTouching(rock) && frames < 1400) {
-      console.log("f*ck")
       rockArray.splice(i, 1);
       health.value -= 15;
     }
   });
   meatArray.forEach((meat, i) => {
     if (cavernicola.isTouching(meat)) {
-      console.log("f*ck yes")
       meatArray.splice(i, 1);
       health.value += 15;
     }
   });
   meteorArray.forEach((meteor, i) => {
     if (cavernicola.isTouchingMeteor(meteor)) {
-      console.log("f*ck METEOR")
       meteorArray.splice(i, 1);
       health.value -= 15;
     }
   });
   meteorArray.forEach((meteor, i) => {
     if (meteor.y >= 400) {
-      console.log("one less METEOR")
       meteorArray.splice(i, 1);
     }
   });
   if (cavernicola.isTouching(bull)) {
-    console.log("f*ck NOOO")
     health.value -= 50;
   }
-  if (cavernicola.isTouching(bull2)) {
-    console.log("f*ck NOOO")
+  if (cavernicola.isTouching(bull2) && frames > 2500) {
     health.value -= 50;
   }
   if (boss.isTouching(bull2)) {
-    console.log("f*ck boss")
     bossHealth.value -= 50;
   }
 }
@@ -385,6 +379,14 @@ function gameOver() {
   let gameOverImg = new Image()
   gameOverImg.src = "";
   //ctx.drawImage(gameOverImg, 0, 0, sizex, sizey, 0, 0, canvas.width, canvas.height)
+  if (health.value <= 0) {
+    console.log("you lose")
+    clearInterval(interval)
+  }
+  else if (bossHealth.value <= 0) {
+    console.log("you win")
+    clearInterval(interval)
+  }
 }
 
 function update() {
@@ -402,10 +404,11 @@ function update() {
   if (frames > 1600) bossName.style.visibility = "visible"
   if (frames > 1600) boss.draw()
   if (frames > 1700 && frames % 500 == 0)boss.attack()
-  if (frames > 1850) bull2.draw();
-  if (frames > 1920) bull2.charge(danger)
+  if (frames > 2500) bull2.draw()
+  if (frames > 2650) bull2.charge(danger)
   drawMeteor(cavernicola.x)
   checkCollition()
+  gameOver()
 }
 
 window.onload = () => {
