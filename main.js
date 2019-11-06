@@ -1,10 +1,14 @@
 const canvas = document.querySelector("canvas")
 const ctx = canvas.getContext("2d")
 let health = document.getElementById("health")
+let bossHealth = document.getElementById("healthboss")
+let bossName = document.getElementById("healthBar2")
+
 let interval;
 let frames = 0;
 let meatArray = []
 let rockArray = []
+let meteorArray = []
 
 class Board {
     constructor() {
@@ -37,10 +41,10 @@ class Bull {
     this.pos = 1
   }
   draw() {
-    if (this.animate === 3 && frames % 12 == 0) {
+    if (this.animate === 3 && frames % 11 == 0) {
       this.animate = 1;
       ctx.drawImage(this.img,149* this.animate, 100, 600 / 4, 600 / 4, this.x, this.y, this.width - 50, this.height + 10)
-    } else if (frames % 12 == 0){
+    } else if (frames % 11 == 0){
       ctx.drawImage(this.img, 149* this.animate, 100, 600 / 4, 600 / 4, this.x, this.y, this.width - 50, this.height + 10)
       this.animate++    }
     ctx.drawImage(this.img, 149* this.animate, 100, 600 / 4, 600 / 4, this.x, this.y, this.width - 50, this.height + 10)
@@ -51,13 +55,18 @@ class Bull {
       this.pos = position
     }
   }
-  charge() {
+  charge(danger) {
     if (this.x >= canvas.width + 400) {
       //this.x = 0
       this.chargeVar = false
     }
-    if (frames % 1100 == 0) this.chargeVar = true
-    if (this.chargeVar == true) this.x += 4
+    if (frames > 1100) {
+      this.chargeVar = true
+      if (frames < 1220 && frames % 2 == 0) {
+        danger.draw(bull.y)
+      }
+    }
+    if (this.chargeVar == true && frames > 1220) this.x += 4
   }
 }
 
@@ -143,8 +152,8 @@ class Cavernicola {
   }
   isTouching(obstacle) {
     return (
-      this.x < obstacle.x + obstacle.width &&
-      this.x + this.width > obstacle.x &&
+      this.x + 80  < obstacle.x + obstacle.width &&
+      this.x + this.width - 30 > obstacle.x &&
       this.y < obstacle.y + obstacle.height &&
       this.y + this.height > obstacle.y && cavernicola.pos == obstacle.pos
     );
@@ -197,7 +206,64 @@ class Danger {
   }
 }
 
+class Meteor {
+  constructor() {
+    this.x = 900
+    this.y = 10
+    this.width = 100
+    this.height = 100
+    this.img = new Image();
+    this.img.src = "./images/meteorRight.png"
+    this.imgLeft = new Image()
+    this.imgLeft.src = "./images/meteorLeft.png"
+    this.imgNow = new Image()
+  }
+  draw(ejex) {
+    this.y += 0.8
+    if (this.x > ejex) {
+      this.x --
+      this.imgNow = this.img
+    }
+    else if (this.x < ejex){
+      this.x ++
+      this.imgNow = this.imgLeft
+    }
+    ctx.drawImage(this.imgNow, 0, 0, 920, 920, this.x, this.y, this.width, this.height)
+  }
+}
 
+class Boss {
+  constructor() {
+    this.x = 830
+    this.y = 230
+    this.width = 1500
+    this.height = 240
+    this.img = new Image()
+    this.img.src = "./images/attack.png"
+    this.animate = 7;
+    this.attackBool = false;
+    this.imgDeath = new Image()
+    this.imgDeath.src = "./images/death.png"
+    this.death = false
+  }
+  draw() {
+    if (this.attackBool == true && this.animate > 0 && frames % 12 == 0){
+      this.animate --
+    }
+    else if (frames % 12 === 0){
+      this.animate = 7;
+      this.attackBool = false
+    }
+    ctx.drawImage(this.img, (7520 / 8) * this.animate, 0, 7520, 817, this.x, this.y, this.width, this.height)
+  }
+  attack() {
+    this.attackBool = true;
+    generateMeteor()
+  }
+  death() {
+    this.death = true
+  }
+}
 
 let board = new Board()
 let bull = new Bull()
@@ -205,6 +271,8 @@ let cavernicola = new Cavernicola()
 let meat = new Meat()
 let rock = new Rock()
 let danger = new Danger()
+let meteor = new Meteor()
+let boss = new Boss()
 
 function generateMeat(){
   if (frames % 400 === 0){
@@ -224,16 +292,26 @@ function clearBoard() {
 }
 
 function generateRock(){
-  if (frames % 100 === 0){
+  if (frames % 110 === 0){
     rock = new Rock()
     rockArray.push(rock)
   }
 }
 
+function generateMeteor(){
+    meteor = new Meteor()
+    meteorArray.push(meteor)
+}
+
+
 function drawRock() {
   if (frames < 1600) {
     rockArray.forEach(rock => rock.draw())
   }
+}
+
+function drawMeteor(ejex) {
+    meteorArray.forEach(meteor => meteor.draw(ejex))
 }
 
 function checkCollition() {
@@ -257,19 +335,28 @@ function checkCollition() {
     }
 }
 
+function gameOver() {
+  let gameOverImg = new Image()
+  gameOverImg.src = "";
+  //ctx.drawImage(gameOverImg, 0, 0, size, size, )
+}
+
 function update() {
   frames++
   clearBoard()
   board.draw()
-  danger.draw(bull.y)
   bull.position(cavernicola.y, cavernicola.pos)
-  bull.charge()
+  bull.charge(danger)
   generateMeat()
   drawMeat()
   generateRock()
   drawRock()
   bull.draw()
   cavernicola.draw()
+  if (frames > 1600) bossName.style.visibility = "visible"
+  if (frames > 1600) boss.draw()
+  if (frames > 1700 && frames % 500 == 0)boss.attack()
+  drawMeteor(cavernicola.x)
   checkCollition()
 }
 
