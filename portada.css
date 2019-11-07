@@ -16,7 +16,7 @@ img:first-of-type {
     margin-top: 30px;
     height: 400px;
     align-self: center;
-    margin-right: 150px;
+    margin-right: 100px;
 }
 
 #objetos {
@@ -32,13 +32,14 @@ img:first-of-type {
 button {
     align-self: center;
     width: 10%;
-    padding: 20px 0;
+    padding: 20px 20px;
     margin-top: 80px;
-    margin-right: 200px;
+    margin-right: 100px;
     background-color: brown;
     border: 3px solid brown;
     border-radius: 10px ;
-    margin-left: 40px
+    margin-left: 0px;
+    width: 50%;
 }
 
 button a {
@@ -49,4 +50,9 @@ button a {
 
 img {
     align-self: center
+}
+
+
+.buttons {
+    display: flex;
 }

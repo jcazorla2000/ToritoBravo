@@ -4,14 +4,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <link rel="stylesheet" href="./style.css">
+    <link rel="stylesheet" href="./styleCoop.css">
     <title>Torito Bravo</title>
 </head>
 <body>
     <div id="top">
         <div id="healthBar1">
-            <h3>Health</h3>
+            <h3>Player1</h3>
             <progress id="health" value="100" max="100"></progress>
+            <h3>Player2</h3>
+            <progress id="health2" value="100" max="100"></progress>
         </div>
         <img src="./images/bull-logo.png">
         <div id="healthBar2">
@@ -20,6 +22,7 @@
         </div>
     </div>
     <canvas width="1000" height="500"></canvas>
-    <script type="text/javascript" src="./main.js"></script>
+    <script type="text/javascript" src="./mainCoop.js"></script>
+    <button type="button" class="buttonReturn"><a href="./index.html">Retry</a></button>
 </body> 
 </html>

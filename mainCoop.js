@@ -1,9 +1,11 @@
 const canvas = document.querySelector("canvas")
 const ctx = canvas.getContext("2d")
 let health = document.getElementById("health")
+let health2 = document.getElementById("health2")
 let bossHealth = document.getElementById("healthboss")
 let bossName = document.getElementById("healthBar2")
 
+let keys = []
 let interval;
 let frames = 0;
 let meatArray = []
@@ -66,9 +68,9 @@ class Bull {
         danger.draw(this.y)
       }
     }
-    if (frames > 2650) {
+    if (frames > 2750) {
       this.chargeVar = true
-      if (frames < 2040 && frames % 2 == 0) {
+      if (frames > 2800 && frames < 2860 && frames % 2 == 0) {
         danger.draw(this.y)
       }
     }
@@ -161,7 +163,7 @@ class Cavernicola {
       this.x + 60  < obstacle.x + obstacle.width &&
       this.x + this.width - 30 > obstacle.x &&
       this.y < obstacle.y + obstacle.height &&
-      this.y + this.height > obstacle.y && cavernicola.pos == obstacle.pos
+      this.y + this.height > obstacle.y && this.pos == obstacle.pos
     );
   }
   isTouchingMeteor(obstacle) {
@@ -299,9 +301,15 @@ let danger = new Danger()
 let meteor = new Meteor()
 let boss = new Boss()
 let bull2 = new Bull()
+bull2.x = 0 - bull2.width;
+
+let cavernicola2 = new Cavernicola()
+cavernicola2.x += 100
+cavernicola2.img.src = "./images/cavernicolaGreen.png"
+cavernicola2.imgLeft.src = "./images/cavernicolaGreen2.png"
 
 function generateMeat(){
-  if (frames % 400 === 0){
+  if (frames % 400 === 0 && frames < 1240){
     meat = new Meat()
     meatArray.push(meat)
   }
@@ -318,7 +326,7 @@ function clearBoard() {
 }
 
 function generateRock(){
-  if (frames % 110 === 0){
+  if (frames % 104 === 0 && frames < 1240){
     rock = new Rock()
     rockArray.push(rock)
   }
@@ -340,23 +348,23 @@ function drawMeteor(ejex) {
     meteorArray.forEach(meteor => meteor.draw(ejex))
 }
 
-function checkCollition() {
+function checkCollition(personaje, vida) {
   rockArray.forEach((rock, i) => {
-    if (cavernicola.isTouching(rock) && frames < 1400) {
+    if (personaje.isTouching(rock) && frames < 1400) {
       rockArray.splice(i, 1);
-      health.value -= 15;
+      vida.value -= 15;
     }
   });
   meatArray.forEach((meat, i) => {
-    if (cavernicola.isTouching(meat)) {
+    if (personaje.isTouching(meat)) {
       meatArray.splice(i, 1);
-      health.value += 15;
+      vida.value += 15;
     }
   });
   meteorArray.forEach((meteor, i) => {
-    if (cavernicola.isTouchingMeteor(meteor)) {
+    if (personaje.isTouchingMeteor(meteor)) {
       meteorArray.splice(i, 1);
-      health.value -= 15;
+      vida.value -= 25;
     }
   });
   meteorArray.forEach((meteor, i) => {
@@ -364,33 +372,47 @@ function checkCollition() {
       meteorArray.splice(i, 1);
     }
   });
-  if (cavernicola.isTouching(bull)) {
-    health.value -= 50;
+  if (personaje.isTouching(bull)) {
+    vida.value -= 50;
   }
-  if (cavernicola.isTouching(bull2) && frames > 2500) {
-    health.value -= 50;
+  if (personaje.isTouching(bull2) && frames > 2500) {
+    vida.value -= 50;
   }
   if (boss.isTouching(bull2)) {
     bossHealth.value -= 50;
   }
 }
 
+
 function gameOver() {
-  let gameOverImg = new Image()
-  gameOverImg.src = "";
-  //ctx.drawImage(gameOverImg, 0, 0, sizex, sizey, 0, 0, canvas.width, canvas.height)
-  if (health.value <= 0) {
-    console.log("you lose")
+  let winImg = new Image()
+  let loseImg = new Image()
+  winImg.src = "./images/win.png"
+  loseImg.src = "./images/lose.png"
+  if (health.value <= 0 || health2.value <= 0) {
     clearInterval(interval)
+    ctx.clearRect(0, 0, canvas.width, canvas.height)
+    ctx.drawImage(loseImg, 0, 0, 802, 481, 0, 0, canvas.width, canvas.height)
   }
   else if (bossHealth.value <= 0) {
-    console.log("you win")
     clearInterval(interval)
+    ctx.clearRect(0, 0, canvas.width, canvas.height)
+    ctx.drawImage(winImg, 0, 0, 750, 469, 0, 0, canvas.width, canvas.height)
   }
 }
 
 function update() {
   frames++
+  // NEW
+  if(keys[87] && frames % 6 == 0)cavernicola.moveUp()
+  if (frames > 1600 && cavernicola.x < canvas.width - 100 && keys[68] && frames % 6 == 0) cavernicola.moveRight()
+  if(keys[83] && frames % 6 == 0)cavernicola.moveDown()
+  if(frames > 1600 && cavernicola.x > 0 && keys[65] && frames % 6 == 0)cavernicola.moveLeft()
+  if(keys[38] && frames % 6 == 0)cavernicola2.moveUp()
+  if (frames > 1600 && cavernicola2.x < canvas.width - 100 && keys[39] && frames % 6 == 0)cavernicola2.moveRight()
+  if(keys[40] && frames % 6 == 0)cavernicola2.moveDown()
+  if(frames > 1600 && cavernicola2.x > 0 && keys[37] && frames % 6 == 0)cavernicola2.moveLeft()
+  //
   clearBoard()
   board.draw()
   bull.position(cavernicola.y, cavernicola.pos)
@@ -401,13 +423,19 @@ function update() {
   drawRock()
   bull.draw()
   cavernicola.draw()
+  cavernicola2.draw()
   if (frames > 1600) bossName.style.visibility = "visible"
   if (frames > 1600) boss.draw()
-  if (frames > 1700 && frames % 500 == 0)boss.attack()
-  if (frames > 2500) bull2.draw()
-  if (frames > 2650) bull2.charge(danger)
+  if (frames > 1640 && frames % 310 == 0)boss.attack()
+  if (frames >= 2650 && frames <= 2750) {
+    bull2.draw();
+    bull2.x += 2.4
+  }
+  if (frames > 2700) bull2.draw()
+  if (frames > 2850) bull2.charge(danger)
   drawMeteor(cavernicola.x)
-  checkCollition()
+  checkCollition(cavernicola2, health2)
+  checkCollition(cavernicola, health)
   gameOver()
 }
 
@@ -416,21 +444,9 @@ window.onload = () => {
   interval = setInterval(update, 1000/ 60)
 }
 
-document.onkeydown = (e) => {
-    switch(e.keyCode){
-      case 87:
-        cavernicola.moveUp()
-        break;
-      case 68:
-        if (frames > 1600 && cavernicola.x < canvas.width - 100) cavernicola.moveRight()
-        break;
-      case 83:
-        cavernicola.moveDown()
-        break;
-      case 65:
-        if(frames > 1600 && cavernicola.x > 0)cavernicola.moveLeft()
-        break;
-      default:
-        break;
-    }
-  } 
+document.body.addEventListener("keydown", (e) => {
+  keys[e.keyCode] = true
+  })
+document.body.addEventListener("keyup", (e) => {
+  keys[e.keyCode] = false
+})

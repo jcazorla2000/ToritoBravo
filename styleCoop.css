@@ -16,7 +16,7 @@ body {
 }
 
 img {
-    height: 200px;
+    height: 180px;
     margin-bottom: 5px;
 }
 
@@ -36,6 +36,11 @@ canvas {
     font-size: 20px;
 }
 
+#health2 {
+    background-color: green;
+    font-size: 20px;
+}
+
 #healthboss {
     background-color: green;
     font-size: 25px;
@@ -46,7 +51,7 @@ canvas {
     flex-direction: column;
     margin-left: 50px;
     margin-right: 20px;
-    margin-top: 100px;
+    margin-top: 50px;
 }
 
 #healthBar1 > h3 {
@@ -66,4 +71,19 @@ canvas {
 #healthBar2 > h3 {
     font-size: 2em;
     color: black;
+}
+
+button {
+    align-self: center;
+    padding: 10px 20px;
+    background-color: brown;
+    border: 3px solid brown;
+    border-radius: 10px ;
+    margin-top: 20px
+}
+
+button a {
+    text-decoration: none;
+    color: white;
+    font-size: 2.1em
 }
