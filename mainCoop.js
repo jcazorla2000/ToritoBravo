@@ -4,6 +4,7 @@ let health = document.getElementById("health")
 let health2 = document.getElementById("health2")
 let bossHealth = document.getElementById("healthboss")
 let bossName = document.getElementById("healthBar2")
+let music = new Audio("./backgroundMusic.mp3")
 
 let keys = []
 let interval;
@@ -441,6 +442,14 @@ function update() {
 window.onload = () => {
   if (interval) return
   interval = setInterval(update, 1000/ 60)
+
+  document.getElementById("start-music").onclick = function() {
+    startMusic();
+  };
+
+  function startMusic() {
+    music.play()
+  }
 }
 
 document.body.addEventListener("keydown", (e) => {

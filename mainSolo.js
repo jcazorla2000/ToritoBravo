@@ -3,12 +3,14 @@ const ctx = canvas.getContext("2d")
 let health = document.getElementById("health")
 let bossHealth = document.getElementById("healthboss")
 let bossName = document.getElementById("healthBar2")
+let music = new Audio("./backgroundMusic.mp3")
 
 let interval;
 let frames = 0;
 let meatArray = []
 let rockArray = []
 let meteorArray = []
+let keys = [];
 
 class Board {
     constructor() {
@@ -394,6 +396,12 @@ function gameOver() {
 
 function update() {
   frames++
+  //
+  if(keys[87] && frames % 6 == 0)cavernicola.moveUp()
+  if (frames > 1600 && cavernicola.x < canvas.width - 100 && keys[68] && frames % 6 == 0) cavernicola.moveRight()
+  if(keys[83] && frames % 6 == 0)cavernicola.moveDown()
+  if(frames > 1600 && cavernicola.x > 0 && keys[65] && frames % 6 == 0)cavernicola.moveLeft()
+  //
   clearBoard()
   board.draw()
   bull.position(cavernicola.y, cavernicola.pos)
@@ -421,23 +429,20 @@ function update() {
 window.onload = () => {
   if (interval) return
   interval = setInterval(update, 1000/ 60)
+
+  document.getElementById("start-music").onclick = function() {
+    startMusic();
+  };
+
+  function startMusic() {
+    music.play()
+  }
 }
 
-document.onkeydown = (e) => {
-    switch(e.keyCode){
-      case 87:
-        cavernicola.moveUp()
-        break;
-      case 68:
-        if (frames > 1600 && cavernicola.x < canvas.width - 100) cavernicola.moveRight()
-        break;
-      case 83:
-        cavernicola.moveDown()
-        break;
-      case 65:
-        if(frames > 1600 && cavernicola.x > 0)cavernicola.moveLeft()
-        break;
-      default:
-        break;
-    }
-  } 
+document.body.addEventListener("keydown", (e) => {
+  keys[e.keyCode] = true
+})
+
+document.body.addEventListener("keyup", (e) => {
+  keys[e.keyCode] = false
+})
