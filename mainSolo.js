@@ -235,7 +235,6 @@ class Meteor {
   draw(ejex) {
     this.y += 0.8
     if (this.x < ejex + 5 && this.x > ejex -5) {
-      console.log("a huevo")
     }
     else if (this.x > ejex) {
       this.x -= 1.25
@@ -382,13 +381,11 @@ function gameOver() {
   winImg.src = "./images/win.png"
   loseImg.src = "./images/lose.png"
   if (health.value <= 0) {
-    console.log("you lose")
     clearInterval(interval)
     ctx.clearRect(0, 0, canvas.width, canvas.height)
     ctx.drawImage(loseImg, 0, 0, 802, 481, 0, 0, canvas.width, canvas.height)
   }
   else if (bossHealth.value <= 0) {
-    console.log("you win")
     clearInterval(interval)
     ctx.clearRect(0, 0, canvas.width, canvas.height)
     ctx.drawImage(winImg, 0, 0, 750, 469, 0, 0, canvas.width, canvas.height)

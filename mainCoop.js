@@ -237,7 +237,6 @@ class Meteor {
   draw(ejex) {
     this.y += 0.8
     if (this.x < ejex + 5 && this.x > ejex -5) {
-      console.log("a huevo")
     }
     else if (this.x > ejex) {
       this.x -= 1.25

@@ -87,3 +87,44 @@ button a {
     color: white;
     font-size: 2.1em
 }
+
+#canvas {
+    display: flex;
+    justify-content: flex-start;
+    margin-left: -5px;
+}
+
+#player1 {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+#player2 {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+#player1 >img:first-of-type{
+    height: 120px;
+    align-self: center;
+    margin-right: 10px
+}
+
+#player2 > img:first-of-type{
+    height: 120px;
+    align-self: center;
+}
+
+#player1 > h3{
+    font-size: 1.7em;
+    margin-left: 40px;
+    margin-bottom: 10px;
+}
+
+#player2 > h3{
+    font-size: 1.7em;
+    margin-left: 35px;
+    margin-bottom: 10px;
+}
