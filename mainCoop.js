@@ -12,6 +12,7 @@ let frames = 0;
 let meatArray = []
 let rockArray = []
 let meteorArray = []
+let explosionArray = []
 
 class Board {
     constructor() {
@@ -251,6 +252,24 @@ class Meteor {
   }
 }
 
+class Explosion {
+  constructor() {
+    this.x = 100
+    this.y = 100
+    this.width = 100
+    this.height = 100
+    this.animate = 0
+    this.img = new Image()
+    this.img.src = "./images/explosion.png"
+  }
+  draw() {
+    if (this.animate < 5  && frames % 8 == 0) {
+      this.animate ++
+    }
+    ctx.drawImage(this.img, 1185/5 * this.animate, 692/3, 1185/5, 692/3, this.x, this.y, this.width, this.height)
+  }
+}
+
 class Boss {
   constructor() {
     this.x = 800
@@ -348,6 +367,12 @@ function drawMeteor(ejex) {
     meteorArray.forEach(meteor => meteor.draw(ejex))
 }
 
+function drawExplosion() {
+  explosionArray.forEach(explosion => {
+    if(explosion.animate < 5)explosion.draw(explosion.animate)
+  })
+}
+
 function checkCollition(personaje, vida) {
   rockArray.forEach((rock, i) => {
     if (personaje.isTouching(rock) && frames < 1400) {
@@ -363,12 +388,20 @@ function checkCollition(personaje, vida) {
   });
   meteorArray.forEach((meteor, i) => {
     if (personaje.isTouchingMeteor(meteor)) {
+      explosion = new Explosion()
+      explosionArray.push(explosion)
+      explosion.x = meteor.x
+      explosion.y = meteor.y
       meteorArray.splice(i, 1);
       vida.value -= 25;
     }
   });
   meteorArray.forEach((meteor, i) => {
     if (meteor.y >= 400) {
+      explosion = new Explosion()
+      explosionArray.push(explosion)
+      explosion.x = meteor.x
+      explosion.y = meteor.y
       meteorArray.splice(i, 1);
     }
   });
@@ -421,6 +454,7 @@ function update() {
   drawMeat()
   generateRock()
   drawRock()
+  drawExplosion()
   bull.draw()
   cavernicola.draw()
   cavernicola2.draw()
