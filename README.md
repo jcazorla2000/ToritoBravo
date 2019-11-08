@@ -39,4 +39,6 @@ Player 2
 >
 > For the second and last phase you are going to be involved in a boss fight, in which your main goal will be to survive.
 
+Demo: https://jcazorla2000.github.io/ToritoBravo/
+
 ### Thanks for playing!!

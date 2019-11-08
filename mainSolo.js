@@ -398,7 +398,7 @@ function update() {
   frames++
   //
   if(keys[87] && frames % 6 == 0)cavernicola.moveUp()
-  if (frames > 1600 && cavernicola.x < canvas.width - 100 && keys[68] && frames % 6 == 0) cavernicola.moveRight()
+  if (frames > 1600 && cavernicola.x < canvas.width - 100 && keys[68] && frames % 6 == 0 && cavernicola.x < canvas.width - 300) cavernicola.moveRight()
   if(keys[83] && frames % 6 == 0)cavernicola.moveDown()
   if(frames > 1600 && cavernicola.x > 0 && keys[65] && frames % 6 == 0)cavernicola.moveLeft()
   //

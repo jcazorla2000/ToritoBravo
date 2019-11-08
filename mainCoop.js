@@ -405,11 +405,11 @@ function update() {
   frames++
   // NEW
   if(keys[87] && frames % 6 == 0)cavernicola.moveUp()
-  if (frames > 1600 && cavernicola.x < canvas.width - 100 && keys[68] && frames % 6 == 0) cavernicola.moveRight()
+  if (frames > 1600 && cavernicola.x < canvas.width - 100 && keys[68] && frames % 6 == 0 && cavernicola.x < canvas.width - 300) cavernicola.moveRight()
   if(keys[83] && frames % 6 == 0)cavernicola.moveDown()
   if(frames > 1600 && cavernicola.x > 0 && keys[65] && frames % 6 == 0)cavernicola.moveLeft()
   if(keys[38] && frames % 6 == 0)cavernicola2.moveUp()
-  if (frames > 1600 && cavernicola2.x < canvas.width - 100 && keys[39] && frames % 6 == 0)cavernicola2.moveRight()
+  if (frames > 1600 && cavernicola2.x < canvas.width - 100 && keys[39] && frames % 6 == 0 && cavernicola2.x < canvas.width - 300)cavernicola2.moveRight()
   if(keys[40] && frames % 6 == 0)cavernicola2.moveDown()
   if(frames > 1600 && cavernicola2.x > 0 && keys[37] && frames % 6 == 0)cavernicola2.moveLeft()
   //
